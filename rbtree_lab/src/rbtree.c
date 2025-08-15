@@ -2,14 +2,67 @@
 
 #include <stdlib.h>
 
-rbtree *new_rbtree(void) {
-  rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
-  // TODO: initialize struct if needed
+/*
+  RB 트리 5가지 특성
+  1. 모든 노드는 red or black
+  2. 루트 노드는 black
+  3. 모든 nil 노드는 black
+  4. 노드가 red라면 자녀들은 black
+  5. 각 노드에서 자손 nil 노드들까지 가는 모든 경로는 black 수와 같다
+*/
+
+rbtree *new_rbtree(void) 
+{
+  rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));  
+
+  // 동적할당 NULL 체크
+  if (p == NULL)
+  {
+    return NULL;
+  }
+
+  // nil 노드 생성
+  p->nil = (node_t *)calloc(1, sizeof(node_t));
+
+  if (p->nil == NULL)
+  {
+    return NULL;
+  }
+  
+  // color 지정
+  p->nil->color = RBTREE_BLACK;
+  
+  // NULL을 대체하기 위한 노드
+  p->nil->left = p->nil->right = p->nil->parent = p->nil;
+
+  // 초기 루트는 nil을 가리킴
+  p->root = p->nil;
+
   return p;
 }
 
-void delete_rbtree(rbtree *t) {
-  // TODO: reclaim the tree nodes's memory
+void delete_subtree(rbtree* t, node_t* p)
+{
+  // 베이스 케이스
+  if (p == NULL || t->nil == p)
+  {
+    return;
+  }
+
+  delete_subtree(t, p->left);
+  delete_subtree(t, p->right);
+  free(p);
+}
+
+void delete_rbtree(rbtree *t) 
+{
+  if (t == NULL)
+  {
+    return;
+  }
+
+  delete_subtree(t, t->root);
+  free(t->nil);
   free(t);
 }
 
