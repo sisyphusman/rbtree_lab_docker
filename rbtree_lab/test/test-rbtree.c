@@ -421,7 +421,7 @@ int main(void)
   getcwd(cwd, sizeof(cwd));
   printf("%s", cwd);
   test_init();
-  // test_insert_single(1024);
+  test_insert_single(1024);
   // test_find_single(512, 1024);
   // test_erase_root(128);
   // test_find_erase_fixed();
